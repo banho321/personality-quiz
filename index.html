@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Trắc nghiệm phân tích tính cách & hướng nghề nghiệp</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --accent:#06b6d4;
+    --muted:#9aa6b2;
+    --text:#e6eef3;
+    --glass: rgba(255,255,255,0.03);
+    --success: #10b981;
+  }
+  *{box-sizing:border-box;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  body{
+    margin:0;background:linear-gradient(180deg,#071022 0%, #06121a 100%);color:var(--text);min-height:100vh;
+    display:flex;align-items:center;justify-content:center;padding:28px;
+  }
+  .container{width:100%;max-width:920px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;padding:20px;box-shadow: 0 10px 30px rgba(2,6,23,0.7);}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:8px;}
+  .logo{
+    width:54px;height:54px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;
+    box-shadow:0 6px 18px rgba(6,182,212,0.12);
+  }
+  h1{margin:0;font-size:20px;}
+  p.lead{margin:2px 0 18px;color:var(--muted);font-size:13px}
+  .progress-wrap{background:var(--glass);height:12px;border-radius:8px;overflow:hidden;margin-bottom:18px}
+  .progress{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#7c3aed)}
+  .quiz-body{display:grid;grid-template-columns:1fr 320px;gap:18px}
+  @media (max-width:880px){.quiz-body{grid-template-columns:1fr;padding-bottom:12px}.aside{order:2}.main{order:1}}
+  .main{background:rgba(255,255,255,0.017);padding:18px;border-radius:10px;min-height:420px}
+  .aside{background:rgba(255,255,255,0.012);padding:18px;border-radius:10px;height:100%}
+  .question{margin-bottom:18px}
+  .q-title{font-weight:600;margin-bottom:8px}
+  .options{display:flex;flex-direction:column;gap:8px}
+  label.option{
+    display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.01);cursor:pointer;
+    border:1px solid transparent;
+  }
+  label.option input{transform:scale(1.05)}
+  label.option:hover{background:rgba(255,255,255,0.02)}
+  label.option.selected{border-color:rgba(255,255,255,0.06);box-shadow:0 6px 20px rgba(2,6,23,0.45)}
+  .small{color:var(--muted);font-size:13px}
+  .btns{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+  button{background:var(--accent);color:#012;border:0;padding:10px 14px;border-radius:8px;font-weight:600;cursor:pointer}
+  button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)}
+  button:disabled{opacity:0.45;cursor:not-allowed}
+  .side-card{background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));padding:12px;border-radius:10px;margin-bottom:12px}
+  .side-card h3{margin:0 0 8px;font-size:15px}
+  .meta{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
+  .result{padding:12px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));margin-top:12px}
+  pre{white-space:pre-wrap;word-wrap:break-word;background:rgba(0,0,0,0.15);padding:10px;border-radius:6px;color:var(--muted);font-size:13px}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:600}
+  footer.small{margin-top:14px;color:var(--muted);font-size:13px}
+  .top-badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(124,58,237,0.12);color:#dcd7ff;font-size:12px;font-weight:700}
+  /* mobile tweaks */
+  @media(max-width:520px){
+    header{gap:10px}
+    .aside{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="container" role="application" aria-labelledby="title">
+  <header>
+    <div class="logo">TN</div>
+    <div>
+      <h1 id="title">Trắc nghiệm: Phân tích tính cách & hướng nghề nghiệp</h1>
+      <p class="lead">Chọn đáp án phù hợp nhất với bạn. Phần 6 bạn có thể chọn tối đa 3 mục cho câu 16, còn lại chọn 1 đáp án mỗi câu.</p>
+    </div>
+    <div style="margin-left:auto"><span class="top-badge">Offline • HTML+JS thuần</span></div>
+  </header>
+
+  <div class="progress-wrap" aria-hidden="true"><div class="progress" id="progress"></div></div>
+
+  <div class="quiz-body">
+    <main class="main" id="main">
+      <!-- Questions will be injected here -->
+    </main>
+
+    <aside class="aside" id="aside">
+      <div class="side-card">
+        <h3>Tiến độ</h3>
+        <div class="meta"><div id="qcount">0</div><div style="margin-left:auto" id="sectionName">Phần 1</div></div>
+      </div>
+
+      <div class="side-card">
+        <h3>Kết quả tạm</h3>
+        <div class="meta"><div>Nhóm nền tảng:</div><div style="margin-left:auto" id="tempGroup">—</div></div>
+        <div class="meta" style="margin-top:8px"><div>Ưu tiên phát triển:</div><div style="margin-left:auto" id="topDev">—</div></div>
+        <div id="resultPreview" style="margin-top:10px;color:var(--muted);font-size:13px">Kết quả đầy đủ sẽ hiện sau khi bấm <strong>Hoàn thành</strong>.</div>
+      </div>
+
+      <div class="side-card">
+        <h3>Hành động</h3>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="prevBtn" class="ghost">Quay lại</button>
+          <button id="nextBtn">Tiếp theo</button>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button id="submitBtn" style="flex:1">Hoàn thành & Xem kết quả</button>
+        </div>
+      </div>
+
+      <div class="side-card">
+        <h3>Tải/Chia sẻ</h3>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="downloadJson" class="ghost">Tải JSON kết quả</button>
+          <button id="restart" class="ghost">Làm lại</button>
+        </div>
+      </div>
+
+      <footer class="small">Phiên bản offline — Mã nguồn mở cho chỉnh sửa.</footer>
+    </aside>
+  </div>
+
+  <div id="outputArea" style="margin-top:18px"></div>
+</div>
+
+<script>
+/*
+  Quiz data built from the uploaded document.
+  Sections:
+    - Phần I–V: questions with A/B choices (used to decide group nền tảng)
+    - Phần VI: questions 16–25: choices A–E (Q16 is multi-select, max choices 3)
+*/
+const questions = [
+  // I. Năng Lượng và Mạng Lưới (Hướng Nội vs Hướng Ngoại)
+  {id:1, section: "I. Năng Lượng và Mạng Lưới", text:"Sau khi dành thời gian dài ở nơi đông người, bạn làm gì?", type:"single", options:[
+    {k:"A", text:"Cảm thấy hào hứng, muốn tiếp tục tương tác xã hội."},
+    {k:"B", text:"Cảm thấy kiệt sức, cần thời gian yên tĩnh một mình để hồi phục."}
+  ]},
+  {id:2, section: "I. Năng Lượng và Mạng Lưới", text:"Bạn thích xây dựng mối quan hệ như thế nào?", type:"single", options:[
+    {k:"A", text:"Nhiều mối quan hệ rộng (bề rộng), thích giao lưu với nhiều kiểu người."},
+    {k:"B", text:"Vài mối quan hệ thân thiết (bề sâu), coi trọng sự tin tưởng tuyệt đối."}
+  ]},
+  {id:3, section: "I. Năng Lượng và Mạng Lưới", text:"Môi trường làm việc lý tưởng của bạn là:", type:"single", options:[
+    {k:"A", text:"Năng động, có tính tương tác cao, hợp tác nhóm thường xuyên."},
+    {k:"B", text:"Yên tĩnh, có không gian cá nhân, tập trung sâu vào công việc."}
+  ]},
+
+  // II. Tư Duy và Khám Phá (Thực tế vs Trực giác)
+  {id:4, section:"II. Tư Duy và Khám Phá", text:"Khi học một kỹ năng mới, điều bạn tìm kiếm trước tiên là gì?", type:"single", options:[
+    {k:"A", text:"Các chi tiết cụ thể, dữ kiện, và cách áp dụng thực hành ngay lập tức."},
+    {k:"B", text:"Các mô hình lý thuyết, ý nghĩa tiềm ẩn và khả năng ứng dụng trong tương lai."}
+  ]},
+
+  // III. Giá Trị và Nguyên Tắc (Lý trí vs Cảm xúc)
+  {id:7, section:"III. Giá Trị và Nguyên Tắc", text:"Yếu tố nào chi phối quyết định quan trọng của bạn nhất?", type:"single", options:[
+    {k:"A", text:"Logic, tính hợp lý, các nguyên tắc khách quan, hiệu suất công việc."},
+    {k:"B", text:"Sự đồng cảm, giá trị cá nhân, và tác động lên cảm xúc của người khác."}
+  ]},
+
+  // IV. Phong Cách Hành Động (Nguyên tắc vs Linh hoạt)
+  {id:10, section:"IV. Phong Cách Hành Động", text:"Khi chuẩn bị cho một chuyến đi, kế hoạch của bạn thường là:", type:"single", options:[
+    {k:"A", text:"Lập lịch trình chi tiết, đặt chỗ trước, cố gắng tuân thủ mọi thứ."},
+    {k:"B", text:"Lên kế hoạch sơ bộ, thích sự ngẫu hứng và sẵn sàng thay đổi bất ngờ."}
+  ]},
+  {id:11, section:"IV. Phong Cách Hành Động", text:"Bạn phản ứng thế nào với những thay đổi lớn trong cuộc sống?", type:"single", options:[
+    {k:"A", text:"Nhanh chóng cố gắng kiểm soát tình hình và lập ra một kế hoạch mới."},
+    {k:"B", text:"Chấp nhận sự thay đổi, tin vào khả năng ứng biến và để mọi thứ diễn ra."}
+  ]},
+  {id:12, section:"IV. Phong Cách Hành Động", text:"Phong cách làm việc dưới áp lực của bạn là:", type:"single", options:[
+    {k:"A", text:"Thích có danh sách việc cần làm (to-do list), tập trung hoàn thành đúng deadline."},
+    {k:"B", text:"Thích sự ngẫu hứng, làm việc tốt nhất gần sát deadline."}
+  ]},
+
+  // V. Động Lực và Tự Nhận Thức (Phát triển Bản sắc)
+  {id:13, section:"V. Động Lực và Tự Nhận Thức", text:"Khi nhận được lời khen về thành tích, bạn phản ứng thế nào?", type:"single", options:[
+    {k:"A", text:"Cảm thấy tự hào và tự tin chấp nhận thành quả của mình."},
+    {k:"B", text:"Có xu hướng giảm nhẹ thành tích, cho rằng mình may mắn hoặc làm chưa đủ tốt."}
+  ]},
+  {id:14, section:"V. Động Lực và Tự Nhận Thức", text:"Yếu tố nào giúp bạn cảm thấy tự tin nhất vào bản thân?", type:"single", options:[
+    {k:"A", text:"Khả năng đạt được mục tiêu, giải quyết vấn đề bằng logic và sự chuẩn bị."},
+    {k:"B", text:"Khả năng thấu hiểu người khác, sự sáng tạo và sự chân thật về cảm xúc."}
+  ]},
+  {id:15, section:"V. Động Lực và Tự Nhận Thức", text:"Bạn ưu tiên phát triển lĩnh vực nào nhất?", type:"single", options:[
+    {k:"A", text:"Khả năng chuyên môn, kỹ năng cứng, thành tích có thể đo lường."},
+    {k:"B", text:"Kỹ năng mềm, khả năng kết nối, sự phát triển về mặt tinh thần."}
+  ]},
+
+  // VI. Chiến Lược Xây Dựng Bản Thân (Chọn Tối đa 3) (16..25)
+  {id:16, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Bạn làm gì để xây dựng bản thân và phát triển kỹ năng? (Chọn tối đa 3)", type:"multi", maxChoose:3, options:[
+    {k:"A", text:"Dành thời gian học chuyên sâu (đọc sách, khóa học, nghiên cứu) trong lĩnh vực mình quan tâm."},
+    {k:"B", text:"Chủ động tìm kiếm thử thách, nhận dự án mới và học hỏi qua trải nghiệm thực tế (Learning by doing)."},
+    {k:"C", text:"Mở rộng mạng lưới quan hệ, tìm người cố vấn (mentor) và học hỏi từ người thành công."},
+    {k:"D", text:"Tập trung cải thiện sức khỏe tinh thần và thể chất (thiền, tập thể dục, nghỉ ngơi đủ)."},
+    {k:"E", text:"Theo dõi phản hồi từ người khác và nỗ lực khắc phục những điểm yếu được chỉ ra."}
+  ]},
+  {id:17, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Bạn ưu tiên xây dựng bản thân theo những hướng nào trong 5 năm tới?", type:"single", options:[
+    {k:"A", text:"Chuyên môn sâu: Trở thành chuyên gia, có kiến thức chuyên sâu hàng đầu trong một lĩnh vực cụ thể."},
+    {k:"B", text:"Ảnh hưởng xã hội: Có khả năng truyền cảm hứng, dẫn dắt cộng đồng hoặc tạo ra tác động tích cực lớn."},
+    {k:"C", text:"Tự do tài chính: Xây dựng nguồn thu nhập thụ động, đạt được sự độc lập về tài chính."},
+    {k:"D", text:"Cân bằng cuộc sống: Đạt được sự hài hòa giữa sự nghiệp, sức khỏe, gia đình và sở thích cá nhân."},
+    {k:"E", text:"Khả năng thích ứng: Rèn luyện sự linh hoạt, dễ dàng thay đổi nghề nghiệp/môi trường sống khi cần."}
+  ]},
+  {id:18, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Bạn định hình phong cách cá nhân và thương hiệu cá nhân như thế nào?", type:"single", options:[
+    {k:"A", text:"Thể hiện sự chuyên nghiệp và đáng tin cậy qua trang phục, ngôn ngữ và sự chuẩn bị chu đáo."},
+    {k:"B", text:"Thể hiện sự độc đáo và sáng tạo bằng cách khác biệt, không ngại thử những điều mới mẻ."},
+    {k:"C", text:"Thể hiện sự ấm áp và gần gũi bằng cách ưu tiên lắng nghe, thể hiện sự thấu cảm với người khác."},
+    {k:"D", text:"Thể hiện sự quyết đoán và có thẩm quyền bằng cách dẫn dắt các cuộc thảo luận, đưa ra ý kiến rõ ràng."},
+    {k:"E", text:"Thể hiện sự minh bạch và chân thật bằng cách luôn chia sẻ quan điểm và cảm xúc một cách cởi mở."}
+  ]},
+  {id:19, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Bạn muốn là ai trong tương lai?", type:"single", options:[
+    {k:"A", text:"Người sáng tạo: Người tạo ra sản phẩm/dịch vụ/giải pháp mới mẻ, mang tính đột phá."},
+    {k:"B", text:"Người dẫn dắt: Người có quyền lực, vị trí cao, đưa ra quyết định chiến lược cho một tổ chức lớn."},
+    {k:"C", text:"Người cống hiến: Người tạo ra giá trị ý nghĩa cho cộng đồng, giúp đỡ những người kém may mắn."},
+    {k:"D", text:"Người tự do: Người có thể làm việc mọi lúc, mọi nơi, và tự mình kiểm soát thời gian/cuộc sống."},
+    {k:"E", text:"Người học hỏi trọn đời: Người không ngừng tiếp thu kiến thức mới và vượt qua các giới hạn cá nhân."}
+  ]},
+  {id:20, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Điều gì sẽ giúp bạn bứt phá và đạt được thành công lớn trong tương lai?", type:"single", options:[
+    {k:"A", text:"Tính kỷ luật và sự kiên trì: Khả năng tuân thủ mục tiêu dài hạn và vượt qua mọi trở ngại."},
+    {k:"B", text:"Mạng lưới quan hệ: Sở hữu các mối quan hệ chất lượng, có khả năng kết nối với những người có tầm ảnh hưởng."},
+    {k:"C", text:"Tư duy phản biện: Khả năng đặt câu hỏi, phân tích vấn đề phức tạp và tìm ra giải pháp tối ưu."},
+    {k:"D", text:"Khả năng giao tiếp: Kỹ năng thuyết trình, đàm phán và truyền đạt ý tưởng một cách thuyết phục."},
+    {k:"E", text:"Sự tập trung: Khả năng làm việc chuyên sâu, không bị phân tán bởi các yếu tố bên ngoài."}
+  ]},
+  {id:21, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Trong bối cảnh toàn cầu hóa, giá trị nào sau đây bạn cho là quan trọng nhất để duy trì bản sắc cá nhân?", type:"single", options:[
+    {k:"A", text:"Giữ vững truyền thống văn hóa dân tộc và ngôn ngữ mẹ đẻ trong mọi tình huống."},
+    {k:"B", text:"Có khả năng thích ứng linh hoạt và chấp nhận sự đa dạng văn hóa, không phân biệt đối xử."},
+    {k:"C", text:"Có tư duy phản biện và khả năng lọc thông tin từ các nguồn quốc tế một cách khách quan."},
+    {k:"D", text:"Xây dựng mạng lưới quan hệ với bạn bè và chuyên gia trên toàn cầu để mở rộng cơ hội."},
+    {k:"E", text:"Tích cực tham gia vào các hoạt động giao lưu văn hóa trực tuyến để quảng bá bản sắc."}
+  ]},
+  {id:22, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Để phát triển bản thân trong thời đại Chuyển đổi số, bạn ưu tiên phát triển năng lực nào?", type:"single", options:[
+    {k:"A", text:"Tư duy Logic/Giải quyết vấn đề (Lập trình, Phân tích dữ liệu)."},
+    {k:"B", text:"Kỹ năng giao tiếp đa văn hóa và làm việc nhóm từ xa (Online Collaboration)."},
+    {k:"C", text:"Trí tuệ cảm xúc (EQ) và khả năng quản lý danh tiếng cá nhân (Online Reputation)."},
+    {k:"D", text:"Khả năng tự học, nghiên cứu độc lập và cập nhật kiến thức công nghệ liên tục."},
+    {k:"E", text:"Kỹ năng thiết kế và sử dụng các công cụ truyền thông số (Visual Communication)."}
+  ]},
+  {id:23, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Bạn muốn là ai trong tương lai (Vai trò xã hội/nghề nghiệp)?", type:"single", options:[
+    {k:"A", text:"Người sáng tạo: ... (sản phẩm/giải pháp đột phá)."},
+    {k:"B", text:"Người dẫn dắt: ... (lãnh đạo)."},
+    {k:"C", text:"Người cống hiến: ... (giải quyết vấn đề xã hội)."},
+    {k:"D", text:"Người tự do: ... (freelancer/digital nomad)."},
+    {k:"E", text:"Người kết nối: ... (xây dựng mạng lưới)."}
+  ]},
+  {id:24, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Để tạo dựng sự khác biệt cho bản sắc cá nhân trên Internet, bạn sẽ nhấn mạnh vào yếu tố nào?", type:"single", options:[
+    {k:"A", text:"Kỹ năng chuyên môn sâu và thành tích học thuật."},
+    {k:"B", text:"Tính cách độc đáo, sự hài hước và phong cách sống cá nhân."},
+    {k:"C", text:"Giá trị đạo đức, sự minh bạch và cam kết trách nhiệm xã hội."},
+    {k:"D", text:"Khả năng giao tiếp đa ngôn ngữ và hiểu biết nhiều nền văn hóa."},
+    {k:"E", text:"Sự tập trung vào một lĩnh vực ngách (niche)."}
+  ]},
+  {id:25, section:"VI. Chiến Lược Xây Dựng Bản Thân", text:"Động lực chính thúc đẩy bạn hoàn thiện bản sắc cá nhân trong thời đại số là gì?", type:"single", options:[
+    {k:"A", text:"Nhu cầu được công nhận, có được địa vị xã hội và thu nhập cao."},
+    {k:"B", text:"Nhu cầu khám phá tiềm năng bản thân và sống đúng với giá trị cốt lõi."},
+    {k:"C", text:"Nhu cầu tạo ra sự khác biệt, ảnh hưởng tích cực đến người khác và thế giới."},
+    {k:"D", text:"Nhu cầu đảm bảo an toàn, ổn định và tránh bị bỏ lại phía sau bởi công nghệ."},
+    {k:"E", text:"Nhu cầu xây dựng thương hiệu cá nhân mạnh mẽ để tối đa hóa cơ hội nghề nghiệp."}
+  ]}
+];
+
+// Helper: descriptions for dev orientation (16: A..E)
+const devOrientationDescriptions = {
+  A: {title:"Logic – chuyên môn – kỷ luật", desc:"Ưa học sâu, muốn làm chuyên gia đầu ngành. Nghề phù hợp: Kỹ sư, Nhà phân tích dữ liệu, Giảng viên, Quản lý dự án, Nhà khoa học."},
+  B: {title:"Hành động – sáng tạo – đổi mới", desc:"Học qua trải nghiệm, dám thử và thích thử thách. Nghề phù hợp: Marketing, Startup, Nhà thiết kế, Nhà sáng tạo nội dung, Doanh nhân."},
+  C: {title:"Giao tiếp – kết nối – ảnh hưởng", desc:"Mở rộng mạng lưới, định hướng lãnh đạo và truyền cảm hứng. Nghề phù hợp: PR, Nhân sự, Diễn giả, Nhà lãnh đạo, Quản trị doanh nghiệp."},
+  D: {title:"Cân bằng – cảm xúc – chữa lành", desc:"Đề cao sức khỏe tinh thần, sự hòa hợp. Nghề phù hợp: Giáo viên, Bác sĩ, Tư vấn tâm lý, Nghệ sĩ, Trị liệu viên."},
+  E: {title:"Nhận thức – chân thật – phát triển bản sắc", desc:"Hướng nội sâu sắc, luôn muốn hoàn thiện và hiểu rõ bản thân. Nghề phù hợp: Nhà tâm lý học, Coach phát triển cá nhân, Giáo dục, Lãnh đạo tinh thần."}
+};
+
+let state = {
+  currentIndex: 0,                 // index in questions array
+  answers: {},                    // id -> selected key(s): string or array for multi
+};
+
+const mainEl = document.getElementById('main');
+const progressEl = document.getElementById('progress');
+const qcountEl = document.getElementById('qcount');
+const sectionNameEl = document.getElementById('sectionName');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+const tempGroupEl = document.getElementById('tempGroup');
+const topDevEl = document.getElementById('topDev');
+const outputArea = document.getElementById('outputArea');
+const downloadJsonBtn = document.getElementById('downloadJson');
+const restartBtn = document.getElementById('restart');
+
+function renderQuestion(index){
+  const q = questions[index];
+  mainEl.innerHTML = '';
+  const wrapper = document.createElement('div');
+  wrapper.className = 'question';
+  const title = document.createElement('div');
+  title.className = 'q-title';
+  title.textContent = `Câu ${q.id}. ${q.text}`;
+  wrapper.appendChild(title);
+
+  const opts = document.createElement('div');
+  opts.className = 'options';
+  // existing selection
+  const existing = state.answers[q.id];
+
+  q.options.forEach(opt => {
+    const id = `q${q.id}_${opt.k}`;
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.htmlFor = id;
+
+    const input = document.createElement('input');
+    if(q.type === 'multi') input.type = 'checkbox';
+    else input.type = 'radio';
+    input.name = `q_${q.id}`;
+    input.id = id;
+    input.value = opt.k;
+    // allow selecting multiple for q16, otherwise single
+    if(existing){
+      if(Array.isArray(existing) && existing.includes(opt.k)) input.checked = true;
+      else if(!Array.isArray(existing) && existing === opt.k) input.checked = true;
+    }
+
+    // handle click
+    input.addEventListener('change', (e)=>{
+      if(q.type === 'multi'){
+        handleMultiChange(q, e.target.value, e.target.checked);
+      } else {
+        state.answers[q.id] = e.target.value;
+        // mark selected visual
+        markSelected();
+      }
+      updateSidePreview();
+    });
+
+    const spanK = document.createElement('div');
+    spanK.style.minWidth = '32px';
+    spanK.style.fontWeight = 700;
+    spanK.textContent = opt.k;
+
+    const txt = document.createElement('div');
+    txt.innerHTML = `<div style="font-weight:600">${opt.k}</div><div class="small">${opt.text}</div>`;
+
+    label.appendChild(input);
+    label.appendChild(txt);
+    opts.appendChild(label);
+  });
+
+  wrapper.appendChild(opts);
+
+  // hint for multi
+  if(q.type === 'multi' && q.maxChoose){
+    const hint = document.createElement('div');
+    hint.className = 'small';
+    hint.style.marginTop='8px';
+    hint.textContent = `Chọn tối đa ${q.maxChoose} mục.`;
+    wrapper.appendChild(hint);
+  }
+
+  mainEl.appendChild(wrapper);
+
+  // footer with navigation on small screens
+  const footerBtns = document.createElement('div');
+  footerBtns.className = 'btns';
+  const prevSmall = document.createElement('button');
+  prevSmall.className='ghost';
+  prevSmall.textContent='Quay lại';
+  prevSmall.onclick = () => prevQuestion();
+  const nextSmall = document.createElement('button');
+  nextSmall.textContent='Tiếp theo';
+  nextSmall.onclick = () => nextQuestion();
+  footerBtns.appendChild(prevSmall);
+  footerBtns.appendChild(nextSmall);
+  mainEl.appendChild(footerBtns);
+
+  // update markers
+  markSelected();
+  qcountEl.textContent = `${index+1} / ${questions.length}`;
+  sectionNameEl.textContent = q.section;
+  updateProgress();
+}
+
+function handleMultiChange(q, value, checked){
+  const current = state.answers[q.id] || [];
+  if(checked){
+    if(current.length >= q.maxChoose){
+      // revert the checkbox (disallow more)
+      // find the input and uncheck
+      const selector = `input[name="q_${q.id}"][value="${value}"]`;
+      const el = document.querySelector(selector);
+      if(el) el.checked = false;
+      alert(`Chỉ được chọn tối đa ${q.maxChoose} mục.`);
+      return;
+    } else {
+      current.push(value);
+    }
+  } else {
+    const idx = current.indexOf(value);
+    if(idx !== -1) current.splice(idx,1);
+  }
+  state.answers[q.id] = current;
+}
+
+function markSelected(){
+  // visual mark selected option labels
+  const labels = Array.from(document.querySelectorAll('label.option'));
+  labels.forEach(l => {
+    l.classList.remove('selected');
+    const inp = l.querySelector('input');
+    if(inp && inp.checked) l.classList.add('selected');
+  });
+}
+
+function updateProgress(){
+  const doneCount = questions.filter(q => {
+    const a = state.answers[q.id];
+    if(!a) return false;
+    if(Array.isArray(a)) return a.length>0;
+    return true;
+  }).length;
+  const pct = Math.round((doneCount / questions.length) * 100);
+  progressEl.style.width = pct + '%';
+}
+
+function nextQuestion(){
+  if(state.currentIndex < questions.length -1){
+    state.currentIndex++;
+    renderQuestion(state.currentIndex);
+  }
+}
+function prevQuestion(){
+  if(state.currentIndex > 0){
+    state.currentIndex--;
+    renderQuestion(state.currentIndex);
+  }
+}
+
+// Update side preview: temporary group and top dev
+function updateSidePreview(){
+  const summary = computeSummaryPreview();
+  tempGroupEl.textContent = summary.groupShort;
+  topDevEl.textContent = summary.topDevShort;
+  document.getElementById('resultPreview').textContent = "Ấn 'Hoàn thành' để xem báo cáo chi tiết.";
+}
+
+function computeSummaryPreview(){
+  // Part 1-5 A/B count
+  const abQuestions = questions.filter(q => q.id <= 15 && (q.type === 'single'));
+  let aCount = 0, bCount = 0;
+  abQuestions.forEach(q=>{
+    const ans = state.answers[q.id];
+    if(ans === 'A') aCount++;
+    if(ans === 'B') bCount++;
+  });
+  let groupShort = '—';
+  if(aCount > bCount) groupShort = 'Nhóm lý trí';
+  else if(bCount > aCount) groupShort = 'Nhóm cảm xúc';
+  else if(aCount===bCount && aCount>0) groupShort = 'Cân bằng';
+  // Part 6 top dev (16..25) count
+  const devQs = questions.filter(q => q.id >=16 && q.id <=25);
+  const counters = {A:0,B:0,C:0,D:0,E:0};
+  devQs.forEach(q=>{
+    const ans = state.answers[q.id];
+    if(!ans) return;
+    if(Array.isArray(ans)){
+      ans.forEach(k => counters[k]++);
+    } else {
+      counters[ans] = (counters[ans]||0) + 1;
+    }
+  });
+  // pick highest
+  const sorted = Object.entries(counters).sort((a,b)=>b[1]-a[1]);
+  const topDevShort = sorted[0][1]===0? '—' : `${sorted[0][0]} (${sorted[0][1]})`;
+  return {groupShort, topDevShort, counters, aCount, bCount};
+}
+
+// Final computation & render result
+function computeAndShowResult(){
+  const preview = computeSummaryPreview();
+  const aCount = preview.aCount;
+  const bCount = preview.bCount;
+  let groupTitle, groupDesc, groupMatches;
+  if(aCount > bCount){
+    groupTitle = "Nhóm lý trí – định hướng kết quả";
+    groupDesc = "Bạn thiên về tư duy logic, thực tế, có tổ chức và kỷ luật. Thích môi trường rõ ràng, có mục tiêu cụ thể và cơ hội thể hiện năng lực.";
+    groupMatches = ["Kinh doanh","Quản trị","Kỹ thuật","Luật","Tài chính","Công nghệ","Phân tích dữ liệu"];
+  } else if(bCount > aCount){
+    groupTitle = "Nhóm cảm xúc – định hướng con người";
+    groupDesc = "Bạn thiên về sáng tạo, linh hoạt, giàu cảm xúc và dễ thích nghi. Thích môi trường mở, mang tính xã hội, được giao tiếp và tạo ảnh hưởng tích cực.";
+    groupMatches = ["Giáo dục","Truyền thông","Nghệ thuật","Nhân sự","Tâm lý học","Ngoại giao","Công tác xã hội"];
+  } else {
+    groupTitle = "Cân bằng (Kết hợp giữa lý trí và cảm xúc)";
+    groupDesc = "Bạn có sự cân bằng giữa tư duy logic và khả năng thấu cảm. Có thể làm tốt trong nhiều vai trò đa dạng.";
+    groupMatches = ["Vị trí đa nhiệm, Quản lý dự án, Lãnh đạo đội ngũ đa ngành"];
+  }
+
+  // Dev orientation counts and ranking
+  const counters = preview.counters;
+  const sorted = Object.entries(counters).sort((a,b)=>b[1]-a[1]);
+  // prepare top choices (those with >0) up to 3
+  const topChoices = sorted.filter(([k,v])=>v>0).slice(0,3).map(([k,v])=>{
+    return {k, v, info: devOrientationDescriptions[k]};
+  });
+  // Build result HTML
+  const out = document.createElement('div');
+  out.className = 'result';
+  const h = document.createElement('h2');
+  h.textContent = 'KẾT QUẢ TRẮC NGHIỆM';
+  out.appendChild(h);
+
+  const gbox = document.createElement('div');
+  gbox.style.marginTop='8px';
+  gbox.innerHTML = `<h3 style="margin:6px 0">${groupTitle}</h3>
+    <div class="small">${groupDesc}</div>
+    <div style="margin-top:8px"><strong>Ngành nghề phù hợp:</strong> ${groupMatches.join(', ')}</div>
+    <div style="margin-top:8px"><strong>Chi tiết điểm A/B:</strong> A = ${aCount}, B = ${bCount}</div>
+  `;
+  out.appendChild(gbox);
+
+  const devBox = document.createElement('div');
+  devBox.style.marginTop='12px';
+  devBox.innerHTML = `<h3 style="margin:6px 0">Định hướng phát triển (Phần VI)</h3>`;
+  if(topChoices.length === 0){
+    devBox.innerHTML += `<div class="small">Bạn chưa chọn đủ thông tin ở phần VI để đưa ra đề xuất.</div>`;
+  } else {
+    topChoices.forEach(tc=>{
+      devBox.innerHTML += `<div style="margin-top:8px">
+        <div style="font-weight:700">${tc.k}. ${tc.info.title} — (được chọn ${tc.v} lần)</div>
+        <div class="small">${tc.info.desc}</div>
+      </div>`;
+    });
+    // also show suggestions based on top
+    devBox.innerHTML += `<div style="margin-top:10px"><strong>Gợi ý hành động:</strong>
+      <ul style="margin:6px 0 0 18px;color:var(--muted)">
+        <li>Nếu thiên về <em>chuyên môn</em>, lập kế hoạch học tập dài hạn & portfolio.</li>
+        <li>Nếu thiên về <em>giao tiếp/ảnh hưởng</em>, đầu tư vào mạng lưới, tìm mentor và xuất hiện trên nền tảng công chúng.</li>
+        <li>Nếu thiên về <em>sức khỏe & cân bằng</em>, ưu tiên lịch nghỉ, chăm sóc tinh thần và kỹ năng quản lý năng lượng.</li>
+      </ul>
+    </div>`;
+  }
+  out.appendChild(devBox);
+
+  // Raw answers summary + download
+  const summaryBlock = document.createElement('div');
+  summaryBlock.style.marginTop='12px';
+  summaryBlock.innerHTML = `<h3 style="margin:6px 0">Tóm tắt câu trả lời</h3>`;
+  const pre = document.createElement('pre');
+  pre.textContent = JSON.stringify(state.answers, null, 2);
+  summaryBlock.appendChild(pre);
+  out.appendChild(summaryBlock);
+
+  // replace output area
+  outputArea.innerHTML = '';
+  outputArea.appendChild(out);
+
+  // update side preview final
+  document.getElementById('resultPreview').textContent = "Đã hoàn thành — xem chi tiết bên dưới.";
+  // scroll to result
+  out.scrollIntoView({behavior:'smooth'});
+}
+
+function downloadJSON(){
+  const payload = {
+    generatedAt: new Date().toISOString(),
+    answers: state.answers,
+    summaryPreview: computeSummaryPreview()
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ketqua_tracnghiem.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function restart(){
+  if(!confirm('Bạn có muốn làm lại bài trắc nghiệm? Mọi câu trả lời hiện tại sẽ bị xóa.')) return;
+  state.answers = {};
+  state.currentIndex = 0;
+  outputArea.innerHTML = '';
+  renderQuestion(0);
+  updateSidePreview();
+}
+
+// initial render of first question
+renderQuestion(0);
+updateSidePreview();
+
+// attach global handlers
+nextBtn.addEventListener('click', ()=> nextQuestion());
+prevBtn.addEventListener('click', ()=> prevQuestion());
+submitBtn.addEventListener('click', ()=> {
+  // quick validation: ensure required answered? We'll allow partial but warn
+  const unanswered = questions.filter(q=>!state.answers[q.id] || (Array.isArray(state.answers[q.id]) && state.answers[q.id].length===0));
+  if(unanswered.length > 0){
+    if(!confirm(`Có ${unanswered.length} câu chưa trả lời. Bạn vẫn muốn hoàn thành và xem kết quả?`)) return;
+  }
+  computeAndShowResult();
+});
+downloadJsonBtn.addEventListener('click', downloadJSON);
+restartBtn.addEventListener('click', restart);
+
+// allow keyboard navigation
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight') nextQuestion();
+  if(e.key === 'ArrowLeft') prevQuestion();
+});
+
+</script>
+</body>
+</html>
